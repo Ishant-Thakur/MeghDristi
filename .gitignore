@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+data/raw_weather_positive.csv
+data/raw_weather_negative.csv
+.env
+venv/

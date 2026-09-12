@@ -1,0 +1,41 @@
+event_id,date,district,location,lat,lon,coord_precision,deaths_missing,source,notes
+E01,2023-08-14,Shimla,Shimla town (Krishna Nagar/Fagli landslide + cloudburst cluster),31.1048,77.1734,town,14.0,Wikipedia - 2023 Himalayan floods,Two landslides + a cloudburst on the same night in Shimla town
+E02,2023-08-14,Solan,Solan town area,30.9045,77.0967,town,7.0,Wikipedia - 2023 Himalayan floods,Roads flooded and homes washed away same monsoon spell as E01
+E03,2023-08-13,Mandi,"Sambal village, Mandi district",31.708,76.9318,district_centroid,7.0,Wikipedia - 2023 Himalayan floods,Sambal-specific coords unavailable; using Mandi district centroid
+E04,2023-06-12,Kinnaur,"Sangla Valley (Kanam, Moorung Nalla, Tangling, Tongtongche Nalla)",31.4167,78.2667,valley,0.0,Holidify news roundup (Jun 2023),Cloudburst at 4+ points in Sangla Valley; hydropower shutdowns; NH-5 blocked
+E05,2024-07-31,Kullu,Nirmand subdivision,31.5333,77.6167,subdivision,10.0,Deccan Herald,"Night of Jul 31-Aug 1 2024; cluster of cloudbursts across Nirmand, Sainj, Malana"
+E06,2024-07-31,Mandi,Padhar / Tikkan,31.79,76.96,approx,9.0,News on Air,Same monsoon night as E05; Tikkan near Padhar
+E07,2024-07-31,Shimla,"Jhakri, Rampur subdivision",31.452,77.633,subdivision,36.0,News on Air,Same monsoon night as E05; 36 missing at Jhakri
+E08,2024-08-01,Kullu,Malana (Malana-I HEP),32.1167,77.3333,village,4.0,SANDRP,Malana-I HEP dam site cloudburst-induced flashflood
+E09,2025-05-24,Kullu,"Jagatkhana, Nirmand area",31.5333,77.6167,subdivision,0.0,News on Air,"No casualties; >12 vehicles damaged, hailstorm also reported"
+E10,2025-06-24,Kullu,Sainj Valley (Jeeva/Jiwa stream),31.7667,77.3333,valley,0.0,The Logical Indian,No casualties reported; flash flood in Jeeva stream
+E11,2025-06-25,Kangra,"Khaniyara, Dharamshala (Manuni rivulet)",32.219,76.3234,town,8.0,News on Air,Labourers near Indira Priyadarshini Hydro Project swept away
+E12,2025-06-25,Kullu,Jeevanala (Sainj),31.7667,77.3333,valley,3.0,News on Air,Part of a 4-site cluster same night as E13-E15
+E13,2025-06-25,Kullu,Shilagarh (Gadsa),31.92,77.05,approx,0.0,News on Air,Same monsoon night as E12
+E14,2025-06-25,Kullu,"Snow Gallery, Manali",32.2432,77.1892,town,0.0,News on Air,Same monsoon night as E12
+E15,2025-06-25,Kullu,Hornagarh (Banjar),31.6333,77.35,town,0.0,News on Air,Same monsoon night as E12
+E16,2025-07-02,Mandi,Thunag region,31.5333,77.15,approx,34.0,News on Air,"Worst-hit district that spell; road connectivity cut, IAF airlift of supplies"
+E17,2025-07-02,Kullu,Snow Gallery area (Manali-Keylong-Leh highway),32.2432,77.1892,town,0.0,News on Air,Flash flood disrupted highway traffic; diverted via Rohtang Pass
+E18,2025-08-01,Kullu,"Malana (Malana-I HEP, 2nd occurrence)",32.1167,77.3333,village,0.0,SANDRP,Coffer dam breached and vehicles washed away; exactly 1 year after E08
+E19,2025-08-20,Kullu,"Peej hill / Shastri Nagar, Kullu town",31.9578,77.1095,town,0.0,News on Air,Debris entered drain in Shastri Nagar; Manali schools closed
+E20,2025-08-22,Kinnaur,Thach village,31.5796,78.2803,district_centroid,0.0,DD News,Three adjoining streams swelled; part of one of HP's deadliest monsoons (424 deaths statewide 2025)
+E21,2022-07-18,Kinnaur,Chango and Shalkhar villages (India-Tibet border),32.5,78.6,approx,0.0,Deccan Herald,No casualties; bridge and crematorium damaged
+E22,2020-08-19,Kullu,Kullu district (2020 monsoon cluster),31.9578,77.1095,district_centroid,0.0,Drishti IAS,Part of Aug 2020 cluster across Kullu/Lahaul-Spiti/Kinnaur
+E23,2019-08-09,Kullu,"Katalaga village, Manikaran valley",32.0333,77.3333,village,0.0,SANDRP (Monsoon 2019 report),Roads/property damaged; bridges and a cowshed washed away
+E24,2019-08-09,Kinnaur,Tangling nullah (India-China border area),31.4167,78.2667,valley,0.0,SANDRP (Monsoon 2019 report),"Multiple hydro projects (Nathpa-Jhakri, Rampur, Karcham-Wangtoo, Baspa) shut down due to silt"
+E25,2022-07-06,Kullu,"Chojh village, Challal panchayat, Parvati valley",32.0167,77.3333,village,1.0,Tribune India,4-6 people and 5 cattle feared washed away; footbridge to village swept away
+E26,2022-08-08,Chamba,Bhadoga village,32.5534,76.1258,district_centroid,1.0,Deccan Herald,15-year-old boy died; Kandhwara village also hit same night
+E27,2024-07-31,Shimla,"Samej area, Rampur region",31.45,77.65,approx,53.0,Business Standard / Gulf News,"Same monsoon night as E05-E07; entire village reportedly washed away, 53 missing"
+E28,2025-07-17,Kullu,"Kais village, Raison",32.15,77.15,approx,1.0,Tribune India,"One dead (Badal Sharma), 3 injured; vehicle washed away"
+E29,2025-08-07,Shimla,"Darshal, Rampur area",31.452,77.633,subdivision,0.0,Deccan Herald,Flash flood in Teklech market; no casualty as houses were evacuated in time
+EV001,2019-08-09,Kinnaur,Kannam,31.7667,78.5833,approx,,,
+EV003,2022-08-09,Chamba,Bharmour,32.44381,76.5387,,,,
+EV006,2024-08-01,Kullu,Malana,32.06661,77.26112,,,,
+EV007,2024-08-01,Shimla,Rampur,31.45,77.63,town,,,
+EV009,2025-06-25,Kullu,Sainj,31.7672,77.30216,,,,
+EV011,2025-06-30,Mandi,Thunag,31.55929,77.16515,,,,
+EV012,2025-07-28,Mandi,Mandi,31.71194,76.93273,,,,
+EV013,2025-08-06,Shimla,Darshal,31.39798,77.70183,,,,
+EV014,2025-08-12,Shimla,Nankhari,31.30471,77.58377,,,,
+EV015,2025-08-12,Kinnaur,Pooh,31.7667,78.5833,town,,,
+EV016,2025-09-14,Bilaspur,Bilaspur,31.33027,76.75663,,,,
