@@ -1,74 +1,151 @@
-# HP Cloudburst Risk — Dataset + Model Pipeline
+# MeghDrishti 🌩️
+**An AI-Powered Digital Twin of Himachal Pradesh for Climate Intelligence & Disaster Simulation**
 
-Covers Day 1 (dataset) + Day 2 (model) of your plan. Run in order:
+Built for HackDays Solan 2026 (Enkindle Club) — Google Gemini API track
+Team: **Retards**
 
-```bash
-pip install -r requirements.txt
-cd scripts
-python 01_fetch_historical_weather.py      # pulls NASA POWER + Open-Meteo for each positive event
-python 02_generate_negative_samples.py     # pulls the same vars for random non-event monsoon days
-python 03_feature_engineering.py           # collapses hourly data -> one engineered row per event, adds elevation
-python 04_train_model.py                   # trains RandomForest, prints confusion matrix + feature importances
+---
+
+## What is this?
+
+MeghDrishti is an interactive Digital Twin of Himachal Pradesh that unifies live weather, terrain, and historical climate data into one explorable environment. Our first working use case on top of that twin is **cloudburst risk analysis** — a machine learning model estimates risk per district in real time, and the Gemini API turns that structured output into a plain-language explanation of *why* a region is at risk.
+
+We are not claiming to replace India's existing weather infrastructure (IMD, ISRO, NDMA). MeghDrishti is an interactive layer on top of open data that makes environmental conditions explorable rather than just reported.
+
+---
+
+## Architecture
+
+```
+Open-Meteo (live weather) ──┐
+NASA POWER (historical)  ───┤
+GADM (district boundaries) ─┘
+             │
+             ▼
+   Node.js + Express backend  ──cron every 15 min──▶  Python/Flask ML service
+             │                                              │
+             │◀─────────────── risk_score, features_used ───┘
+             ▼
+   Gemini API (gemini-2.5-flash)
+   → plain-language risk explanation (structured JSON output)
+             │
+             ▼
+      MongoDB (stores weather snapshots, risk scores, explanations)
+             │
+             ▼
+   React (Vite) + Leaflet frontend — Digital Twin dashboard
 ```
 
-**Run this on a machine with real internet access** (your laptop / Colab) — `power.larc.nasa.gov`
-and `open-meteo.com` need to be reachable, which they won't be from a locked-down sandbox.
+---
 
-## What's in `data/positive_events.csv`
+## Tech stack
 
-29 real, individually-sourced HP cloudburst events (2019–2025), pulled from news archives
-(News on Air/Akashvani, Deccan Herald, Tribune India, SANDRP, Wikipedia's 2023 Himalayan floods
-page, Drishti IAS, The Logical Indian, Business Standard/Gulf News, Holidify's news roundup).
-Columns: `date, district, location, lat, lon, coord_precision, deaths_missing, source, notes`.
+| Layer | Technology |
+|---|---|
+| Frontend | React (Vite), Tailwind CSS, React-Leaflet, OpenTopoMap tiles, Recharts, TanStack Query |
+| Backend | Node.js, Express, MongoDB (Atlas), node-cron |
+| ML model | Python, scikit-learn, XGBoost (ensemble: RandomForest + Logistic Regression + XGBoost) |
+| ML serving | Flask |
+| Generative AI | Google Gemini API (`gemini-2.5-flash`), structured JSON output |
+| Data sources | Open-Meteo (live + historical weather), NASA POWER (historical training data), GADM/OpenStreetMap (district geodata) |
+| Deployment | Vercel (frontend), Render/Railway (backend + ML service) |
 
-**On the "last 10 years starting 2015" ask:** I searched specifically for 2015–2018 HP
-cloudburst events and could not find individually-dated, sourced incidents in freely accessible
-news archives from that window — HP's cloudburst reporting got much more granular (and much more
-frequent) from 2019 onward, which is also when SANDRP started publishing yearly incident
-round-ups. For 2015–2018 coverage, your best sources are:
-- The NIT Kurukshetra paper (Kushwaha & Rathi, *Natural Hazards*, 2025) — their 31-event dataset
-  spans 2004–2019 and is exactly the kind of curated list you'd need; worth emailing the authors
-  or checking if the dataset is in their paper's supplementary material.
-- Bhan, Paul & Kharbanda, "Cloud bursts in Himachal Pradesh," *Mausam* 55(4), 2004 — historical
-  IMD record, may cover earlier events if you can get library/Google Scholar access.
-- SANDRP's own site (sandrp.in) has yearly "Cloudburst incidents in HP" posts back through
-  2019 — 2015-2018 isn't covered in a single round-up post the way 2019+ is, so you'd need to
-  search their site's tag archives page by page.
+---
 
-Given the timeline you're on, I'd suggest **training on the 2019–2025 events as your positive
-set** and being upfront that "10 years" in your data-source description means "10 years of
-weather data pulled from NASA POWER for both positive and negative samples," not "10 years of
-individually labeled positive events" — that's an honest distinction that holds up under judge
-questioning.
+## Project structure
 
-**Coordinate honesty:** `coord_precision` tells you how good each lat/lon is:
-- `town`/`village` — genuinely located at that place
-- `subdivision`/`valley`/`approx` — nearest good reference point I could pin, not the literal
-  spot the cloudburst hit
-- `district_centroid` — only the district was reported, not the location
+```
+meghdrishti/
+├── frontend/            # React + Vite dashboard and landing page
+├── backend/             # Express API + cron job + Gemini integration
+├── inference/           # Flask ML inference service
+│   ├── app.py
+│   └── risk_model.py
+├── models/              # Trained model artifacts (.joblib)
+├── scripts/             # Training + feature engineering scripts
+└── README.md
+```
 
-For a hackathon-credible model this is fine, but say it out loud on your data-quality slide
-rather than let judges assume every point is GPS-exact. If you have time, spend 20–30 min on
-Google Maps refining the `approx`/`subdivision` rows to closer coordinates — that's the single
-highest-leverage cleanup you could do with spare time.
+---
 
-**You should keep pulling more events if you have time** — I stopped at 22 to leave you time for
-the model/backend, but the SANDRP 2023 report alone documents 65 HP cloudburst incidents that
-year; their site (sandrp.in, search "cloudburst") and the NIT Kurukshetra paper's 31 events
-(2004–2019, cited in the plan doc) are the fastest next sources to mine for more positive rows.
+## Running it locally
 
-## What's NOT implemented (matches the plan's honest scoping)
+### 1. ML inference service
+```bash
+cd inference
+pip install -r requirements.txt
+python app.py
+# runs on http://localhost:5001
+```
+Check it's alive: `curl http://localhost:5001/health`
 
-- **Slope / distance-to-nearest-ridge**: the plan flags this as a real orographic-lift feature,
-  but it needs DEM raster analysis (not a simple API call) — left out of `03_feature_engineering.py`
-  to keep Day 2 tractable. Elevation alone is included as a cheaper proxy. Add slope later if you
-  have a spare hour and want the stronger version.
-- District boundary GeoJSON (for the map, not the model) — pull from GADM as the plan describes;
-  that's a frontend/Day-3 concern, not part of this dataset/model piece.
+### 2. Backend
+```bash
+cd backend
+npm install
+# create a .env with:
+#   MONGODB_URI=...
+#   GEMINI_API_KEY=...
+#   MODEL_SERVICE_URL=http://localhost:5001
+npm start
+```
 
-## On the ML claim for judges
+### 3. Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-With ~20-25 positive events, don't say "we predict cloudbursts" — say you compute a real-time
-risk score from known cloudburst precursors (humidity spike, pressure drop, precip rate,
-orographic proxy), trained/validated against documented HP events, and show the confusion matrix
-honestly. `04_train_model.py` prints exactly that.
+---
+
+## API reference
+
+**ML inference service** — `POST http://localhost:5001/predict`
+```json
+{
+  "hourly_readings": [{"timestamp": "...", "rh_pct": 82, "pressure_hpa": 945, "precip_mm": 4.2, "wind_gust_ms": 12, "cloud_cover_pct": 90}],
+  "current_time": "2026-09-12T14:00:00",
+  "lat": 32.15, "lon": 77.15, "elevation_m": 1800
+}
+```
+Returns `risk_score` (0–1), `risk_level`, `ml_probability`, `seasonal_multiplier`, and `features_used`.
+
+**Backend API**
+- `GET /api/districts` — all monitored districts with latest risk + explanation
+- `GET /api/districts/:id/risk` — full detail + 24h risk history for one district
+
+---
+
+## Model limitations — read before citing accuracy numbers
+
+The cloudburst risk model is trained on **40 documented HP cloudburst events (2019–2025)** plus ~114 non-event days, with a cross-validated ROC-AUC of **~0.69–0.71**. This is real signal above random guessing, but with this little labeled data for a rare, highly localized event, it should be presented as a **validated proof-of-concept methodology**, not a production-grade early-warning system. Do not report inflated accuracy figures in the pitch or docs — the honest numbers are the credible ones.
+
+---
+
+## Data sources & references
+
+- [Google Gemini API documentation](https://ai.google.dev/gemini-api/docs)
+- [Open-Meteo API](https://open-meteo.com/en/docs)
+- [NASA POWER API](https://power.larc.nasa.gov/docs/services/api/)
+- [GADM administrative boundaries](https://gadm.org/download_country.html)
+- Kushwaha & Rathi, "Cloudburst prediction in the Indian Himalaya using artificial neural network," *Natural Hazards*, 2025
+- Bhan, Paul & Kharbanda, "Cloud bursts in Himachal Pradesh," *Mausam* 55(4), 2004
+- IMD nowcasting/modernization materials (Doppler radar network, MHEW-DSS, SACHET)
+- [OpenTopoMap](https://opentopomap.org/) (map tiles, CC-BY-SA)
+
+---
+
+## Roadmap
+- Landslide risk layer (terrain + rainfall interaction)
+- Flood simulation (rainfall → runoff modeling)
+- Historical climate comparison view
+- Expand Digital Twin coverage beyond Himachal Pradesh
+
+---
+
+## License
+Add your chosen license here (MIT recommended for hackathon projects).
+
+## Team
+**Retards** — HackDays Solan 2026, JUIT Waknaghat
